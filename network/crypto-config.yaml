@@ -1,0 +1,30 @@
+OrdererOrgs:
+  - Name: orderer
+    Domain: ordrer.track-covid.org
+    Specs:
+      - Hostname: orderer
+
+PeerOrgs:
+  - Name: companies
+    Domain: companies.track-covid.org
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+
+  - Name: ncdc
+    Domain: ncdc.track-covid.org
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 1
+
+  - Name: test-centres
+    Domain: test-centres.track-covid.org
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+    Users:
+      Count: 1
