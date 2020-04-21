@@ -29,6 +29,9 @@ function generateArtifacts() {
         exit 1
     fi
 
+    if [ ! -d "channel-artifacts" ]; then
+        mkdir channel-artifacts
+    fi
     echo "##########################################"
     echo "######### Generating Artifatcs ###########"
     echo "##########################################"
