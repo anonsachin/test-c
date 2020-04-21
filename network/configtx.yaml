@@ -1,0 +1,186 @@
+---
+
+Organizations:
+  - &orderer
+     Name: orderer
+     ID: ordererMSP
+     MSPDir: crypto-config/ordererOrganizations/ordrer.track-covid.org/msp
+     Policies:
+        Readers:
+            Type: Signature
+            Rule: "OR('ordererMSP.member')"
+        Writers:
+            Type: Signature
+            Rule: "OR('ordererMSP.member')"
+        Admins:
+            Type: Signature
+            Rule: "OR('ordererMSP.admin')"
+     OrdererEndpoints:
+      - orderer.track-covid.org:7050
+
+  - &companies
+    Name: companies
+    ID: companiesMSP
+    MSPDir: crypto-config/peerOrganizations/companies.track-covid.org/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: OR('companiesMSP.admin', 'companiesMSP.peer', 'companiesMSP.client')
+      Writers:
+        Type: Signature
+        Rule: OR('companiesMSP.admin', 'companiesMSP.peer', 'companiesMSP.client')
+      Admins:
+        Type: Signature
+        Rule: OR('companiesMSP.admin')
+      Endorsement:
+        Type: Signature
+        Rule: "OR('companiesMSP.peer')"
+    AnchorPeers:
+      - Host: peer0.companies.track-covid.org
+        Port: 7051
+
+  - &ncdc
+    Name: ncdc
+    ID: ncdcMSP
+    MSPDir: crypto-config/peerOrganizations/ncdc.track-covid.org/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: OR('ncdcMSP.admin', 'ncdcMSP.peer', 'ncdcMSP.client')
+      Writers:
+        Type: Signature
+        Rule: OR('ncdcMSP.admin', 'ncdcMSP.peer', 'ncdcMSP.client')
+      Admins:
+        Type: Signature
+        Rule: OR('ncdcMSP.admin')
+      Endorsement:
+        Type: Signature
+        Rule: OR('ncdcMSP.peer')
+    AnchorPeers:
+      - Host: peer0.ncdc.track-covid.org
+        Port: 9051
+
+  - &test-centres
+    Name: test-centres
+    ID: test-centresMSP
+    MSPDir: crypto-config/peerOrganizations/test-centres.track-covid.org/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: OR('test-centresMSP.admin', 'test-centresMSP.peer', 'test-centresMSP.client')
+      Writers:
+        Type: Signature
+        Rule: OR('test-centresMSP.admin', 'test-centresMSP.peer', 'test-centresMSP.client')
+      Admins:
+        Type: Signature
+        Rule: OR('test-centresMSP.admin')
+      Endorsement:
+        Type: Signature
+        Rule: "OR('test-centresMSP.peer')"
+    AnchorPeers:
+      - Host: peer0.test-centres.track-covid.org
+        Port: 11051
+
+Capabilities:
+  Channel: &ChannelCapabilities
+    V2_0: true
+
+  Orderer: &OrdererCapabilities
+    V2_0: true
+
+  Application: &ApplicationCapabilities
+    V2_0: true
+
+
+Application: &ApplicationDefaults
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "ANY Admins"
+    LifecycleEndorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+    Endorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+  Capabilities:
+      <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+  OrdererType: etcdraft
+  EtcdRaft:
+    Consenters:
+      - Host: orderer.track-covid.org
+        Port: 7050
+        ClientTLSCert: crypto-config/ordererOrganizations/ordrer.track-covid.org/orderers/orderer.ordrer.track-covid.org/tls/server.crt
+        ServerTLSCert: crypto-config/ordererOrganizations/ordrer.track-covid.org/orderers/orderer.ordrer.track-covid.org/tls/server.crt
+
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Organizations:
+
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "ANY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+
+Channel: &ChannelDefaults
+    Policies:
+      Readers:
+          Type: ImplicitMeta
+          Rule: "ANY Readers"
+      Writers: 
+          Type: ImplicitMeta
+          Rule: "ANY Writers"
+      Admins:
+          Type: ImplicitMeta
+          Rule: "ANY Admins"
+    Capabilities:
+        <<: *ChannelCapabilities
+
+Profiles:
+  Genesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *orderer
+      Capabilities:
+        <<: *OrdererCapabilities
+    Consortiums:
+      TestConsortiums:
+        Organizations:
+          - *companies
+          - *ncdc
+          - *test-centres
+
+  TestChannel:
+    Consortium: TestConsortiums
+    <<: *ChannelDefaults
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *companies
+        - *ncdc
+        - *test-centres
+      Capabilities:
+        <<: *ApplicationCapabilities
