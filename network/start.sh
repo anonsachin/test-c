@@ -1,7 +1,10 @@
+#!/bin/bash
+
 export PATH=${PATH}:${PWD}/bin
 export FABRIC_CFG_PATH=${PWD}
 
-CHANNEL_NAME="covid-test"
+CHANNEL_NAME="covid-track"
+DELAY="3"
 
 function generateCerts() {
     which cryptogen
@@ -36,6 +39,8 @@ function generateArtifacts() {
     echo "######### Generating Artifatcs ###########"
     echo "##########################################"
 
+    echo "######### Generating genesis block ###########"
+    echo
     set -x
     configtxgen -profile Genesis -outputBlock ./channel-artifacts/genesis.block -channelID sys-channel
     res=$?
@@ -44,6 +49,9 @@ function generateArtifacts() {
         echo "Failed !!!!!"
         exit 1
     fi
+
+    echo "######### Generating channel tx ###########"
+    echo
     set -x
     configtxgen -profile TestChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID $CHANNEL_NAME
     res=$?
@@ -52,7 +60,22 @@ function generateArtifacts() {
         echo "Failed !!!!!"
         exit 1
     fi
+    
+    echo "######### Generating anchor peer tx ###########"
+    echo
+    for org in companies ncdc test-centres; do
 
+        echo "############### org = ${org} ###############"
+        set -x
+        configtxgen -profile TestChannel -outputAnchorPeersUpdate ./channel-artifacts/${org}anchors.tx -channelID $CHANNEL_NAME -asOrg ${org}
+        res=$?
+        set +x
+        if [ $res -ne 0 ]; then
+            echo "Failed !!!!!"
+            exit 1
+        fi
+        echo
+    done
 }
 
 generateCerts
