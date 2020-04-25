@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# export PATH=${PATH}:${PWD}/bin
+# export FABRIC_CFG_PATH=${PWD}
+
 IMAGETAG="latest"
 
 IMAGE_TAG=$IMAGETAG docker-compose -f docker-compose.yaml up -d

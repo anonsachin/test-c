@@ -114,13 +114,16 @@ Application: &ApplicationDefaults
       <<: *ApplicationCapabilities
 
 Orderer: &OrdererDefaults
-  OrdererType: etcdraft
-  EtcdRaft:
-    Consenters:
-      - Host: orderer.track-covid.org
-        Port: 7050
-        ClientTLSCert: crypto-config/ordererOrganizations/ordrer.track-covid.org/orderers/orderer.ordrer.track-covid.org/tls/server.crt
-        ServerTLSCert: crypto-config/ordererOrganizations/ordrer.track-covid.org/orderers/orderer.ordrer.track-covid.org/tls/server.crt
+  OrdererType: solo
+  Addresses:
+      - orderer.track-covid.org:7050
+  # OrdererType: etcdraft
+  # EtcdRaft:
+    # Consenters:
+      # - Host: orderer.track-covid.org
+        # Port: 7050
+        # ClientTLSCert: crypto-config/ordererOrganizations/ordrer.track-covid.org/orderers/orderer.ordrer.track-covid.org/tls/server.crt
+        # ServerTLSCert: crypto-config/ordererOrganizations/ordrer.track-covid.org/orderers/orderer.ordrer.track-covid.org/tls/server.crt
 
   BatchTimeout: 2s
   BatchSize:
