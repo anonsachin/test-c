@@ -68,7 +68,9 @@ services:
       - CORE_PEER_ID=peer0.test-centres.track-covid.org
       - CORE_PEER_ADDRESS=peer0.test-centres.track-covid.org:11051
       - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.test-centres.track-covid.org:11051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:11051
       - CORE_PEER_CHAINCODEADDRESS=peer0.test-centres.track-covid.org:11053
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:11053
       - CORE_PEER_LOCALMSPID=test-centresMSP
       - CORE_CHAINCODE_LOGGING_SHIM=INFO
     volumes:
@@ -120,8 +122,6 @@ services:
       - CORE_PEER_ADDRESS=peer0.companies.track-covid.org:7051
       - CORE_PEER_LOCALMSPID=companiesMSP
       - CORE_PEER_TLS_ENABLED=false
-      - CORE_PEER_TLS_CERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/companies.track-covid.org/peers/peer0.companies.track-covid.org/tls/server.crt
-      - CORE_PEER_TLS_KEY_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/companies.track-covid.org/peers/peer0.companies.track-covid.org/tls/server.key
       - CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/companies.track-covid.org/peers/peer0.companies.track-covid.org/tls/ca.crt
       - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/companies.track-covid.org/users/Admin@companies.track-covid.org/msp
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
