@@ -128,8 +128,8 @@ services:
     command: /bin/bash
     volumes:
       - /var/run/:/host/var/run/
-      - ../chaincode/:/opt/gopath/src/chaincode
       - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
+      - ./../chaincode_adv:/opt/gopath/src/github.com/hyperledger/fabric/peer/chaincode
       - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
       - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
     depends_on:
@@ -137,5 +137,28 @@ services:
       - peer0.companies.track-covid.org
       - peer0.ncdc.track-covid.org
       - peer0.test-centres.track-covid.org
+    networks:
+      - track
+
+  chaincode:
+    container_name: chaincode
+    image: hyperledger/fabric-nodeenv
+    tty: true
+    environment:
+      - GOPATH=/opt/gopath
+      - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
+      - FABRIC_LOGGING_SPEC=DEBUG
+      - CORE_PEER_ID=track
+      - CORE_PEER_ADDRESS=peer0.companies.track-covid.org:7051
+      - CORE_PEER_LOCALMSPID=companiesMSP
+      - CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/chaincode/crypto/peerOrganizations/companies.track-covid.org/users/Admin@companies.track-covid.org/msp
+      - CORE_PEER_TLS_ENABLED=false
+      # - CORE_CHAINCODE_ID_NAME="track:1.0"
+    working_dir: /opt/gopath/src/chaincode
+    command: /bin/sh -c 'sleep 6000000'
+    volumes:
+      - /var/run/:/host/var/run/
+      - /crypto-config:/opt/gopath/src/chaincode/crypto/
+      - ./../chaincode_adv:/opt/gopath/src/chaincode/
     networks:
       - track

@@ -1,0 +1,50 @@
+{
+  "name": "track",
+  "version": "1.0.0",
+  "description": "Tracking covid cases of working people and incentivising good behaviour.",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc mocha test",
+    "start": "fabric-chaincode-node start"
+  },
+  "engines": {
+    "node": "^12.16.1",
+    "npm": "^6.13.4"
+  },
+  "engine-strict": true,
+  "engineStrict": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anonsachin/test-c.git"
+  },
+  "dependencies": {
+    "fabric-contract-api": "^2.0.0",
+    "fabric-shim": "^2.0.0"
+  },
+  "keywords": [
+    "hyperledger",
+    "fabric"
+  ],
+  "author": "anonsachin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anonsachin/test-c/issues"
+  },
+  "nyc": {
+    "exclude": [
+      "coverage/**",
+      "test/**"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "all": true,
+    "check-coverage": true,
+    "statements": 100,
+    "branches": 100,
+    "functions": 100,
+    "lines": 100
+  },
+  "homepage": "https://github.com/anonsachin/test-c#readme"
+}
