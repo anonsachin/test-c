@@ -18,8 +18,8 @@
     "url": "git+https://github.com/anonsachin/test-c.git"
   },
   "dependencies": {
-    "fabric-contract-api": "^2.0.0",
-    "fabric-shim": "^2.0.0"
+    "fabric-contract-api": "^2.5.4",
+    "fabric-shim": "^2.5.4"
   },
   "keywords": [
     "hyperledger",
